@@ -1,0 +1,142 @@
+{
+    "os": "Linux-5.15.0-60-generic-x86_64-with-debian-buster-sid",
+    "python": "3.6.10",
+    "heartbeatAt": "2023-02-19T11:35:59.814967",
+    "startedAt": "2023-02-19T11:35:58.721542",
+    "docker": null,
+    "cuda": null,
+    "args": [
+        "--yaml_config",
+        "/DAGMM/config/train.yaml"
+    ],
+    "state": "running",
+    "program": "main.py",
+    "codePath": "main.py",
+    "host": "dagmm",
+    "username": "root",
+    "executable": "/opt/conda/bin/python",
+    "cpu_count": 10,
+    "cpu_count_logical": 20,
+    "cpu_freq": {
+        "current": 5048.0726,
+        "min": 800.0,
+        "max": 5300.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 4924.105,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 5057.326,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 5026.523,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 5016.217,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 5047.425,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 5047.093,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 4966.38,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 5095.262,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 5218.119,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 5006.739,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 5089.732,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 5088.799,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 5111.435,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 5093.805,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 5100.712,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 5098.883,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 5101.454,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 5088.558,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 5106.381,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 5105.382,
+            "min": 800.0,
+            "max": 5300.0
+        }
+    ],
+    "disk": {
+        "total": 168.55163955688477,
+        "used": 95.35646057128906
+    },
+    "gpu": "NVIDIA GeForce RTX 3080",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 3080",
+            "memory_total": 10737418240
+        }
+    ],
+    "memory": {
+        "total": 31.288719177246094
+    }
+}

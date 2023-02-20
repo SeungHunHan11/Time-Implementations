@@ -1,0 +1,32 @@
+save_dir: ./save_models/
+exp_name: TS-MTSAD
+
+
+DATASET:
+  input_dir: ./data/TimeSeries.csv
+  label_dir: ./data/labelsTimeSeries.csv
+  batch_size: 256
+  num_workers: 12
+  window_size: 1
+  slide_size: 1
+  split_ratio: [0.6, 0.1, 0.3]
+  preprocess: True
+
+MODEL:
+  input_dim: 11
+  hidden_dim: 10
+  latent_dim: 1
+  n_gmm: 5
+  dropout: 0.2
+
+TRAIN:
+  SEED: 1998
+  lr: 0.0001
+  epochs: 10
+  lambda1: 0.001
+  lambda2: 0.005
+  use_wandb: True
+  
+LOG:
+  log_interval: 1
+  eval_interval: 10
