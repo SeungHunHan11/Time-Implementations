@@ -1,0 +1,142 @@
+{
+    "os": "Linux-5.19.0-32-generic-x86_64-with-glibc2.29",
+    "python": "3.8.10",
+    "heartbeatAt": "2023-03-02T01:51:37.116411",
+    "startedAt": "2023-03-02T01:51:36.438947",
+    "docker": null,
+    "cuda": null,
+    "args": [
+        "--yaml_config",
+        "/workspace/TAnoGAN/config/Train_D_G_w60_step1_hid100.yaml"
+    ],
+    "state": "running",
+    "program": "main.py",
+    "codePath": "main.py",
+    "host": "ts",
+    "username": "root",
+    "executable": "/usr/bin/python",
+    "cpu_count": 10,
+    "cpu_count_logical": 20,
+    "cpu_freq": {
+        "current": 4859.3624,
+        "min": 800.0,
+        "max": 5300.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 4953.933,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 4900.238,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 4939.207,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 4959.01,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 4899.982,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 4900.288,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 4930.819,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 4982.289,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 4900.02,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 4900.065,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 4902.408,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 3700.0,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 4899.08,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 4899.807,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 4907.031,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 4900.175,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 4953.327,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 4939.209,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 4900.067,
+            "min": 800.0,
+            "max": 5300.0
+        },
+        {
+            "current": 4920.293,
+            "min": 800.0,
+            "max": 5300.0
+        }
+    ],
+    "disk": {
+        "total": 168.55163955688477,
+        "used": 88.78848648071289
+    },
+    "gpu": "NVIDIA GeForce RTX 3080",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 3080",
+            "memory_total": 10737418240
+        }
+    ],
+    "memory": {
+        "total": 31.288127899169922
+    }
+}

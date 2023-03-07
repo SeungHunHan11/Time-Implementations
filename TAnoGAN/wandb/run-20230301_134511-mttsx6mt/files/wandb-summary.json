@@ -1,0 +1,1 @@
+{"lr": 0.0002, "train_acc_d_real": 1.0, "train_loss_d_real": 1.0995023498492957, "train_acc_d_fake": 0.0, "train_acc_g": 1.0, "train_loss_g": 0.40718648945335795, "train_loss_d": 1.5054780397794942, "_timestamp": 1677678349.8842924, "_runtime": 38.83734846115112, "_step": 20, "_wandb": {"runtime": 298}}
