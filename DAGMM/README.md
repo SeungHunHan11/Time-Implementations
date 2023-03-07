@@ -32,13 +32,13 @@ python save_dataloader.py --yaml_config ./config/save_dataloader.yaml
 ## Train
 
 ```python
-python main.py --yaml_config .config/train.yaml
+python main.py --yaml_config ./config/train.yaml
 ```
 
 ## Evaluation
 
 ```python
-python test.py --yaml_config .config/test.yaml
+python test.py --yaml_config ./config/test.yaml
 ```
 
 ## Training Details
