@@ -63,4 +63,4 @@ SEED: 1998
 
 - Anomaly score and label scatter plot with time sequence as x-axis.
 - Yellow dots are real anomalous points.
-- Please refer to [notebook] (https://github.com/SeungHunHan11/Time-Implementations/blob/master/DAGMM/test.ipynb) for further information
+- Please refer to [**test.ipynb**] (https://github.com/SeungHunHan11/Time-Implementations/blob/master/DAGMM/test.ipynb) for further information
