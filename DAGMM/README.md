@@ -59,7 +59,7 @@ SEED: 1998
 
 # Train Result
 
-![output.png](DAGMM%20pytorch%20implementation%201f8c5440bb634245a71fe56c63a0e4a1/output.png)
+![output.png](./output.png)
 
 - Anomaly score and label scatter plot with time sequence as x-axis.
 - Yellow dots are real anomalous points.
