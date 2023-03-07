@@ -4,7 +4,7 @@
 
 [[Paper](https://bzong.github.io/doc/iclr18-dagmm.pdf)] Deep Autoencoding Gaussian Mixture Model for Unsupervised Anomaly Detection (ICLR,2018)
 
-**For further multivariate timeseries dataset application, please thoroughly modify related codes in [factory.py](http://factory.py) under dataset folder i.e. ./dataset/factory.py**
+**For further multivariate timeseries dataset application, please thoroughly modify related codes in [factory.py](https://github.com/SeungHunHan11/Time-Implementations/blob/master/DAGMM/dataset/factory.py) under dataset folder.
 
 ## Dataset
 
