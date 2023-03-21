@@ -57,7 +57,7 @@ SEED: 2
 
 # Evaluation Result
 
-![Untitled](./img.png)
+![Untitled2](./img.png)
 
 - Red dot indicates a data point that has been labeled as an ‘anomaly’ by TAnoGAN
 - Yellow graph shows ground truth (1 for anomalous data point, 0 for normal data point)
