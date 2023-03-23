@@ -37,8 +37,8 @@ import json
 
 
 ```python
-df_dir = '/directory/ambient_temperature_system_failure.csv'
-label_dir = '/directory/combined_windows.json'
+df_dir = '/workspace/ambient_temperature_system_failure.csv'
+label_dir = '/workspace/combined_windows.json'
 label_name = 'realKnownCause/ambient_temperature_system_failure.csv'
 ```
 
@@ -147,7 +147,7 @@ import seaborn as sns
 sns.kdeplot(np.array(df['value']), bw=0.5) # Distribution is quite skewed to left. Still, it has distinctive bell-shaped curve.
 ```
 
-    /tmp/ipykernel_1955/1888462493.py:3: UserWarning: 
+    /tmp/ipykernel_4214/1888462493.py:3: UserWarning: 
     
     The `bw` parameter is deprecated in favor of `bw_method` and `bw_adjust`.
     Setting `bw_method=0.5`, but please see the docs for the new parameters
@@ -339,11 +339,19 @@ disp_cm.plot();
 
 plt.grid(False)
 plt.tight_layout()
+plt.title('TSAD for ambient_temperature_system_failure Dataset scatter plot ISO', size = 10)
 ```
 
 
+
+
+    Text(0.5, 1.0, 'TSAD for ambient_temperature_system_failure Dataset scatter plot ISO')
+
+
+
+
     
-![png](TSAD_machine_learning_files/TSAD_machine_learning_27_0.png)
+![png](TSAD_machine_learning_files/TSAD_machine_learning_27_1.png)
     
 
 
@@ -396,6 +404,18 @@ To partially add temporal context to the model, I will preprocess the data using
 
 
 ```python
+(df['anomaly']==-1).any()
+```
+
+
+
+
+    True
+
+
+
+
+```python
 def roll(df: pd.DataFrame, window_size:int, step_size: int):
 
     seq_len = (len(df)-window_size)//step_size +1
@@ -408,13 +428,13 @@ def roll(df: pd.DataFrame, window_size:int, step_size: int):
 
     while(idx < df['value'].values.shape[0] - window_size + 1):
         window_data[seq_idx] = df['value'].values[idx:idx+window_size]
-        window_label[seq_idx] = -1 if df['anomaly'][idx:idx+window_size].sum().item() < 0 else 1
+        window_label[seq_idx] = -1 if (df['anomaly'][idx:idx+window_size]==-1).any() else 1
         idx += step_size
         seq_idx +=1
     
     return window_data, window_label
 
-window_data, window_label = roll(df, 60, 1)
+window_data, window_label = roll(df, 60, 60)
 ```
 
 
@@ -442,11 +462,19 @@ disp_cm = ConfusionMatrixDisplay(cm, display_labels=[1, -1])
 disp_cm.plot();
 plt.grid(False)
 plt.tight_layout()
+plt.title('TSAD for ambient_temperature_system_failure Dataset scatter plot ISO windowed', size = 10)
 ```
 
 
+
+
+    Text(0.5, 1.0, 'TSAD for ambient_temperature_system_failure Dataset scatter plot ISO windowed')
+
+
+
+
     
-![png](TSAD_machine_learning_files/TSAD_machine_learning_33_0.png)
+![png](TSAD_machine_learning_files/TSAD_machine_learning_34_1.png)
     
 
 
@@ -455,16 +483,16 @@ plt.tight_layout()
 return_metrics(window_label, preds_iso)
 ```
 
-    Recall: 0.8560 F1: 0.8969 AUROC: 0.6918 Precision: 0.9420
+    Recall: 0.7547 F1: 0.8333 AUROC: 0.6774 Precision: 0.9302
 
 
 
 
 
-    (0.8559531153608884,
-     0.8968972204266321,
-     0.6917887123765768,
-     0.9419551934826884)
+    (0.7547169811320755,
+     0.8333333333333334,
+     0.6773584905660377,
+     0.9302325581395349)
 
 
 
@@ -512,11 +540,20 @@ disp_cm = ConfusionMatrixDisplay(cm, display_labels=[1, -1])
 disp_cm.plot();
 plt.grid(False)
 plt.tight_layout()
+plt.title('TSAD for ambient_temperature_system_failure Dataset scatter plot LOF', size = 10)
+
 ```
 
 
+
+
+    Text(0.5, 1.0, 'TSAD for ambient_temperature_system_failure Dataset scatter plot LOF')
+
+
+
+
     
-![png](TSAD_machine_learning_files/TSAD_machine_learning_38_0.png)
+![png](TSAD_machine_learning_files/TSAD_machine_learning_39_1.png)
     
 
 
@@ -528,7 +565,7 @@ plot_ts(df,anomalous_incidence,'Local Outlier Factor TSAD','LOF')
 
 
     
-![png](TSAD_machine_learning_files/TSAD_machine_learning_39_0.png)
+![png](TSAD_machine_learning_files/TSAD_machine_learning_40_0.png)
     
 
 
@@ -589,11 +626,20 @@ disp_cm = ConfusionMatrixDisplay(cm, display_labels=[1, -1])
 disp_cm.plot();
 plt.grid(False)
 plt.tight_layout()
+plt.title('TSAD for ambient_temperature_system_failure Dataset scatter plot LOF windowed', size = 10)
+
 ```
 
 
+
+
+    Text(0.5, 1.0, 'TSAD for ambient_temperature_system_failure Dataset scatter plot LOF windowed')
+
+
+
+
     
-![png](TSAD_machine_learning_files/TSAD_machine_learning_43_0.png)
+![png](TSAD_machine_learning_files/TSAD_machine_learning_44_1.png)
     
 
 
@@ -602,20 +648,15 @@ plt.tight_layout()
 return_metrics(window_label, preds_lof)
 ```
 
-    Recall: 0.9314 F1: 0.9189 AUROC: 0.5368 Precision: 0.9068
+    Recall: 0.9245 F1: 0.9074 AUROC: 0.5623 Precision: 0.8909
 
 
 
 
 
-    (0.9313695249845774,
-     0.9188983566646377,
-     0.5368173591773715,
-     0.9067567567567567)
+    (0.9245283018867925,
+     0.9074074074074073,
+     0.5622641509433962,
+     0.8909090909090909)
 
 
-
-
-```python
-
-```
