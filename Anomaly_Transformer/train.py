@@ -1,5 +1,4 @@
 import torch
-torch.__version__
 from utils import kl_loss, min_max_loss
 import time
 import wandb
