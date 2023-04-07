@@ -1,5 +1,4 @@
 import torch
-torch.__version__
 from utils import kl_loss, min_max_loss
 import time
 import wandb
@@ -26,20 +25,6 @@ def train(train_loader, model, optimizer, criterion, device, Lambda):
             window_size = xx.shape[1]
 
             output, series, prior, _ = model(xx)
-
-            # maximum_phase_loss = 0.0
-            # minimum_phase_loss = 0.0
-
-            # for n in range(len(prior)):
-
-            #     series_dist = series[n]
-            #     prior_dist = (prior[n] / torch.unsqueeze(torch.sum(prior[n], dim=-1), dim=-1).repeat(1, 1, 1,window_size))
-                
-            #     maximum_phase_loss +=  (torch.mean(kl_loss(series_dist, prior_dist.detach()))+torch.mean(prior_dist.detach(),series_dist))
-            #     minimum_phase_loss += (torch.mean(kl_loss(series_dist.detach(), prior_dist))+torch.mean(prior_dist,series_dist.detach()))
-
-            # maximum_phase_loss /= len(prior)
-            # minimum_phase_loss /= len(prior)
 
             maximum_phase_loss, minimum_phase_loss = min_max_loss(prior = prior, series = series, window_size = window_size, temperature = 1)
 
