@@ -36,9 +36,9 @@ def train(train_loader, model, optimizer, criterion, device, Lambda):
             loss_max_list = (loss_max_list + loss_max).item()
 
             if (idx + 1) % 1 == 0:
-                print(f'Minimum train loss at [{idx+1}/{len(train_loader)}]: {loss_min}, Average: ({loss_min_list/(idx+1)})')
-                print(f'Maximum train loss at [{idx+1}/{len(train_loader)}]: {loss_max}, Average: ({loss_max_list/(idx+1)})')
-            
+                print('At [{}/{}] \n Minimum train loss : {:0.4f} Average: ({:0.4f})   Maximum train loss : {:0.4f}, Average: ({:0.4f})'.format(
+                    idx+1,len(train_loader),loss_min,loss_min_list/(idx+1),loss_max, loss_max_list/(idx+1)
+                ))
             optimizer.zero_grad()
 
             loss_max.backward(retain_graph = True)
@@ -73,8 +73,9 @@ def eval(data_loader, model, criterion, device, Lambda):
             loss_max_list += loss_max
 
             if (idx + 1) % 1 == 0:
-                print(f'Minimum val loss at [{idx+1}/{len(data_loader)}]: {loss_min}, Average: ({loss_min_list/(idx+1)})')
-                print(f'Maximum val loss at [{idx+1}/{len(data_loader)}]: {loss_max}, Average: ({loss_max_list/(idx+1)})')
+                print('At [{}/{}] \n Minimum train loss : {:0.4f} Average: ({:0.4f})   Maximum train loss : {:0.4f}, Average: ({:0.4f})'.format(
+                    idx+1,len(train_loader),loss_min,loss_min_list/(idx+1),loss_max, loss_max_list/(idx+1)
+                ))
 
     return loss_min_list/(idx+1), loss_max_list/(idx+1)
 
