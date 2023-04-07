@@ -63,17 +63,3 @@ class anomaly_dataset(Dataset):
             label = np.float32(self.label[idx : idx + self.window_size])
 
         return data, label
-
-        
-from torch.utils.data import DataLoader
-data_set = anomaly_dataset('/directory/data/',
-                'SMAP', 'train', 'StandardScaler', 100, 100)
-
-import numpy as np
-
-len(data_set)
-
-# torch.tensor(data_set.__getitem__(0)[0])
-
-# loader = DataLoader(data_set,256)
-
