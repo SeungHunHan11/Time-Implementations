@@ -1,4 +1,5 @@
-batch_size='128 256'
+use_wandb=$1
+batch_size='256'
 pos_type='learnable encoding'
 scalers='StandardScaler MinMaxScaler'
 norm_type='BatchNorm1d LayerNorm'
@@ -22,6 +23,7 @@ do
                         Exp_name="$data-batch_$bs-pos_$pos-scaler_$scaler-Norm_$norm-Emb_$emb-Lambda_$lambda"
 
                         python main.py \
+                            --use_wandb $use_wandb \
                             --train_mode True \
                             --use_scheduler True \
                             --end_to_end False \
