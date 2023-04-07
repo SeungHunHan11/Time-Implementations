@@ -38,6 +38,7 @@ def run(args):
     drop_pos = str2bool(args.drop_pos)
     end_to_end = str2bool(args.end_to_end)
     eval_per_epoch = str2bool(args.eval_per_epoch)
+    use_wandb = str2bool(args.use_wandb)
 
     savedir = os.path.join(args.savedir, args.dataset_name, args.run_name)
     os.makedirs(savedir, exist_ok=True)    
@@ -133,9 +134,11 @@ def run(args):
             scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.epochs)
         else:
             scheduler = None
+        
+        if use_wandb:
+            #initialize wandb
+            wandb.init(name=args.run_name,group = args.dataset_name, project='Anomaly-Transformer', config=args)
 
-        #initialize wandb
-        wandb.init(name=args.run_name,group = args.dataset_name, project='Anomaly-Transformer', config=args)
 
         loader = threshold_loader if eval_per_epoch else None
 
@@ -152,7 +155,8 @@ def run(args):
             epochs = args.epochs,
             temperature = args.temperature,
             anomaly_ratio = args.anomaly_ratio,
-            threshold_loader = threshold_loader
+            threshold_loader = threshold_loader,
+            use_wandb = use_wandb
             )
     
         if end_to_end:
@@ -285,6 +289,8 @@ def run(args):
 if __name__ =='__main__':
     
     parser = argparse.ArgumentParser(description="Classification for Computer Vision")
+    parser.add_argument('--use_wandb',type=str,default=True,help='Use wandb?')
+
     parser.add_argument('--train_mode',type=str,default=True,help='Train Mode')
     parser.add_argument('--use_scheduler',type=bool,default=True,help='Use Scheduler?')
     parser.add_argument('--eval_per_epoch',type=bool,default=True,help='Evaluate per epoch?')
@@ -335,6 +341,3 @@ if __name__ =='__main__':
     args = parser.parse_args()
 
     run(args)
-
-# data_set = anomaly_dataset('/directory/data/',
-#                 'SMD', 'train', 'StandardScaler', 100, 100)
