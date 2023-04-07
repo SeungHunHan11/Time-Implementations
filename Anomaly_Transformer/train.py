@@ -1,4 +1,5 @@
 import torch
+torch.__version__
 from utils import kl_loss, min_max_loss
 import time
 import wandb
@@ -80,7 +81,7 @@ def eval(data_loader, model, criterion, device, Lambda):
 
 def fit(train_loader, val_loader, model, 
         optimizer, criterion, scheduler, 
-        device, Lambda, 
+        device, Lambda, use_wandb,
         save_dir, epochs, temperature = 50, anomaly_ratio = 4.00, threshold_loader = None
         ):
     
@@ -96,8 +97,9 @@ def fit(train_loader, val_loader, model,
                    }
 
         print(f'At [{epoch}/{epochs}] Maximum phase Loss is {val_loss_max}. Minimum phase Loss is {val_loss_min}')
-
-        wandb.log(metrics, step = epoch+1)
+        
+        if use_wandb:
+            wandb.log(metrics, step = epoch)
 
         if scheduler:
             scheduler.step()        
@@ -167,7 +169,8 @@ def fit(train_loader, val_loader, model,
                         'test_precision' : precision
                         }
             
-            wandb.log(eval_result, step = epoch+1)
+            if use_wandb:
+                wandb.log(eval_result, step = epoch)
 
             print(
                 "Accuracy : {:0.4f}, Precision : {:0.4f}, Recall : {:0.4f}, F-score : {:0.4f}, F1-Score {:0.4f}".format(
