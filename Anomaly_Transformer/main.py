@@ -39,7 +39,7 @@ def run(args):
     end_to_end = str2bool(args.end_to_end)
     eval_per_epoch = str2bool(args.eval_per_epoch)
     use_wandb = str2bool(args.use_wandb)
-
+    
     savedir = os.path.join(args.savedir, args.dataset_name, args.run_name)
     os.makedirs(savedir, exist_ok=True)    
     
@@ -191,7 +191,7 @@ def run(args):
                                         train_energy = train_energy
                                         )
                 pred, ground_truth= evaluation(
-                                            threshold_loader = threshold_loader,
+                                            loader = test_loader,
                                             device = device,
                                             criterion = criterion_infer,
                                             model = model, 
@@ -255,9 +255,9 @@ def run(args):
                                       train_energy = train_energy
                                       )
             pred, ground_truth= evaluation(
-                                        threshold_loader = threshold_loader,
+                                        loader = test_loader,
                                         device = device,
-                                        criterion = criterion,
+                                        criterion = criterion_infer,
                                         model = model, 
                                         temperature = args.temperature,
                                         threshold = threshold
@@ -292,10 +292,10 @@ if __name__ =='__main__':
     parser.add_argument('--use_wandb',type=str,default=True,help='Use wandb?')
 
     parser.add_argument('--train_mode',type=str,default=True,help='Train Mode')
-    parser.add_argument('--use_scheduler',type=bool,default=True,help='Use Scheduler?')
-    parser.add_argument('--eval_per_epoch',type=bool,default=True,help='Evaluate per epoch?')
+    parser.add_argument('--use_scheduler',type=str,default=True,help='Use Scheduler?')
+    parser.add_argument('--eval_per_epoch',type=str,default=True,help='Evaluate per epoch?')
 
-    parser.add_argument('--end_to_end',type=bool,default=False,help='True for train and inference altogether')
+    parser.add_argument('--end_to_end',type=str,default=False,help='True for train and inference altogether')
 
 
     parser.add_argument('--savedir',type=str,default='./saved_models/',help='Model save directory')
@@ -322,7 +322,7 @@ if __name__ =='__main__':
     parser.add_argument('--emb_type',type=str, default = 'Linear', choices = ['Linear', 'Conv1d'], help='Embedding method')
     parser.add_argument('--pos_type',type=str, default = 'learnable', choices = ['learnable', 'encoding'], help='Positional encoding method')
 
-    parser.add_argument('--drop_pos',type=bool, default = False, help='Use positional embedding or not. True for drop pos embedding')
+    parser.add_argument('--drop_pos',type=str, default = False, help='Use positional embedding or not. True for drop pos embedding')
 
 
     parser.add_argument('--batch_size',type=int,default = 256, help='Batch size')
