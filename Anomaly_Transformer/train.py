@@ -82,7 +82,8 @@ def eval(data_loader, model, criterion, device, Lambda):
 def fit(train_loader, val_loader, model, 
         optimizer, criterion, scheduler, 
         device, Lambda, use_wandb,
-        save_dir, epochs, temperature = 50, anomaly_ratio = 4.00, threshold_loader = None
+        save_dir, epochs, temperature = 50, anomaly_ratio = 4.00, 
+        threshold_loader = None, test_loader = None
         ):
     
     best_loss_min = 0
@@ -131,7 +132,7 @@ def fit(train_loader, val_loader, model,
             with torch.no_grad():
                 train_energy = get_energy(model = model, 
                                         criterion = criterion_infer, 
-                                        data_loader = threshold_loader, 
+                                        data_loader = train_loader, 
                                         device = device,
                                         temperature = temperature, 
                                         anomaly_ratio = anomaly_ratio,
@@ -147,7 +148,7 @@ def fit(train_loader, val_loader, model,
                                         train_energy = train_energy
                                         )
                 pred, ground_truth= evaluation(
-                                            loader = val_loader,
+                                            loader = test_loader,
                                             device = device,
                                             criterion = criterion_infer,
                                             model = model, 
