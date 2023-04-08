@@ -105,27 +105,9 @@ def fit(train_loader, val_loader, model,
         if scheduler:
             scheduler.step()        
 
-        if val_loss_min > best_loss_min and -1*val_loss_max > best_loss_max:
-            
-            print(f'At epoch {epoch} New Best score updated from Min_phase: {best_loss_min} Max Phase: {best_loss_max} to Min_phase: {-1*val_loss_min}, Max Phase: {-1*val_loss_max}')
-
-            best_loss_min = val_loss_min
-            best_loss_max = -1*val_loss_max
-
-            torch.save(model.state_dict(), os.path.join(save_dir, 'best_model.pt'))
-
-        torch.save(model.state_dict(), os.path.join(save_dir, 'latest_model.pt'))
-
         if threshold_loader is not None:
 
             criterion_infer = nn.MSELoss(reduction='none')
-
-            model_dir = os.path.join(save_dir, 'latest_model.pt')
-
-            try:
-                model.load_state_dict(torch.load(model_dir))
-            except:
-                raise NotImplementedError()
 
             model.eval()
 
@@ -147,8 +129,9 @@ def fit(train_loader, val_loader, model,
                                         anomaly_ratio = anomaly_ratio,
                                         train_energy = train_energy
                                         )
+
                 pred, ground_truth= evaluation(
-                                            loader = test_loader,
+                                            loader = threshold_loader,
                                             device = device,
                                             criterion = criterion_infer,
                                             model = model, 
@@ -169,9 +152,6 @@ def fit(train_loader, val_loader, model,
                         'test_f1_score': f1_sc,
                         'test_precision' : precision
                         }
-            
-            if use_wandb:
-                wandb.log(eval_result, step = epoch)
 
             print(
                 "Accuracy : {:0.4f}, Precision : {:0.4f}, Recall : {:0.4f}, F-score : {:0.4f}, F1-Score {:0.4f}".format(
@@ -179,3 +159,17 @@ def fit(train_loader, val_loader, model,
                     recall, f_score, f1_sc))
             
             json.dump(eval_result, open(os.path.join(save_dir, f"epoch_{epoch}_test_result.json"),'w'), indent='\t')
+
+        if val_loss_min > best_loss_min and -1*val_loss_max > best_loss_max:
+            
+            if use_wandb:
+                wandb.log(eval_result, step = epoch)
+
+            print(f'At epoch {epoch} New Best score updated from Min_phase: {best_loss_min} Max Phase: {best_loss_max} to Min_phase: {-1*val_loss_min}, Max Phase: {-1*val_loss_max}')
+
+            best_loss_min = val_loss_min
+            best_loss_max = -1*val_loss_max
+
+            torch.save(model.state_dict(), os.path.join(save_dir, 'best_model.pt'))
+
+        torch.save(model.state_dict(), os.path.join(save_dir, 'latest_model.pt'))
