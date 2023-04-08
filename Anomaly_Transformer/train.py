@@ -118,7 +118,7 @@ def fit(train_loader, val_loader, model,
 
         if threshold_loader is not None:
 
-            criterion_infer = nn.MSELoss(reduce=False)
+            criterion_infer = nn.MSELoss(reduction='none')
 
             model_dir = os.path.join(save_dir, 'latest_model.pt')
 
