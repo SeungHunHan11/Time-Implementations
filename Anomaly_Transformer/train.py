@@ -73,8 +73,8 @@ def eval(data_loader, model, criterion, device, Lambda):
             loss_max_list += loss_max
 
             if (idx + 1) % 1 == 0:
-                print('At [{}/{}] \n Minimum train loss : {:0.4f} Average: ({:0.4f})   Maximum train loss : {:0.4f}, Average: ({:0.4f})'.format(
-                    idx+1,len(train_loader),loss_min,loss_min_list/(idx+1),loss_max, loss_max_list/(idx+1)
+                print('At [{}/{}] \n Minimum Validation loss : {:0.4f} Average: ({:0.4f})   Maximum Validation loss : {:0.4f}, Average: ({:0.4f})'.format(
+                    idx+1,len(data_loader),loss_min,loss_min_list/(idx+1),loss_max, loss_max_list/(idx+1)
                 ))
 
     return loss_min_list/(idx+1), loss_max_list/(idx+1)
@@ -147,7 +147,7 @@ def fit(train_loader, val_loader, model,
                                         train_energy = train_energy
                                         )
                 pred, ground_truth= evaluation(
-                                            threshold_loader = threshold_loader,
+                                            loader = val_loader,
                                             device = device,
                                             criterion = criterion_infer,
                                             model = model, 
