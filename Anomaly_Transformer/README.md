@@ -34,7 +34,7 @@ Abnormal
 
 ### Docker environment
 
-- [nvcr.io/nvidia/pytorch:19.12-py3](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch/tags)
+- [nvcr.io/nvidia/pytorch:20.12-py3](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch/tags)
 - wandb == 0.12.18
 - or use dockerfile in ./Docker/ folder
 
