@@ -44,7 +44,7 @@ class PositionalEmbedding(nn.Module):
         batch_size, seq_len = x.size()[:2]
         embeddings = self.weight[:seq_len, :].view(1, seq_len, self.d_model)
 
-        return x + embeddings
+        return embeddings
     
 class ConvTokenEmbedding(nn.Module):
     def __init__(self, c_in, d_model):
@@ -92,11 +92,8 @@ class TSEmbedding(nn.Module):
         out = self.emb(x)
 
         if not self.drop_pos:
-            out = self.pos(out)
+            out = out + self.pos(out)
 
         out = self.dropout(out)
 
         return out
-    
-# emb = TSEmbedding(38, 126, 'learnable', 'Conv1d', 0.4)
-# emb(sample).shape
