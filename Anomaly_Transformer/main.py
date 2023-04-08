@@ -161,7 +161,7 @@ def run(args):
     
         if end_to_end:
             
-            criterion_infer = nn.MSELoss(reduce=False)
+            criterion_infer = nn.MSELoss(reduction='none')
 
             model_dir = os.path.join(savedir,  args.checkpoint_name+'.pt')
 
@@ -196,7 +196,8 @@ def run(args):
                                             criterion = criterion_infer,
                                             model = model, 
                                             temperature = args.temperature,
-                                            threshold = threshold
+                                            threshold = threshold,
+                                            test_loader = test_loader
                                             )
 
             accuracy = accuracy_score(ground_truth, pred)
@@ -224,7 +225,7 @@ def run(args):
     
     else:
         print('Inference Mode')
-        criterion = nn.MSELoss(reduce=False)
+        criterion = nn.MSELoss(reduction='none')
 
         model_dir = os.path.join(savedir,  args.checkpoint_name+'.pt')
         print(model_dir)
