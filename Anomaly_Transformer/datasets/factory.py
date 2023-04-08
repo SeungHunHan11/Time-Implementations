@@ -31,17 +31,16 @@ class anomaly_dataset(Dataset):
         self.label = label
 
         if mode == 'train':
-            self.data = self.train_data[:len(self.train_data)*0.8]
+            self.data = self.train_data[:int(len(self.train_data)*0.8)]
             self.length = (self.data.shape[0] - self.window_size) // self.step_size + 1
         elif mode == 'val':
-            self.data = self.train_data[len(self.train_data)*0.8:]
+            self.data = self.train_data[int(len(self.train_data)*0.8):]
             self.length = (self.data.shape[0] - self.window_size) // self.step_size + 1
         elif mode == 'test':
             self.data = self.test_data
             self.length = (self.data.shape[0] - self.window_size) // self.step_size + 1
-
         elif mode == 'threshold':
-            self.data = self.train_data[len(self.train_data)*0.8:]
+            self.data = self.train_data[int(len(self.train_data)*0.8):]
             self.length = (self.data.shape[0] - self.window_size) // self.window_size + 1
 
         self.mode = mode
