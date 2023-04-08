@@ -60,12 +60,12 @@ def get_energy(
 
         return thresh
     
-def evaluation(threshold_loader, device, criterion, model,temperature, threshold):
+def evaluation(loader, device, criterion, model, temperature, threshold):
 
     test_labels = []
     attens_energy = []
 
-    for i, (xx, yy) in enumerate(threshold_loader):
+    for i, (xx, yy) in enumerate(loader):
         xx = xx.to(device)
         window_size = xx.shape[1]
 
