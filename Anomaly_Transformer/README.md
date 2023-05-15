@@ -188,7 +188,16 @@ Code Reference
 
 # Experiment Results
 
-- To be uploaded…
+Values are derived from average experiment result using three seed (1998, 1105, 1905).  
+
+| Dataset | PA | Precision | Recall | F1-Score |
+| --- | --- | --- | --- | --- |
+| MSL | with_PA | 0.9672 | 0.9672 | 0.9432 |
+|  | without_PA | 0.0111 | 0.0111 | 0.0203 |
+| SMAP | with_PA | 0.9965 | 0.9965 | 0.9653 |
+|  | without_PA | 0.0107 | 0.0107 | 0.0199 |
+| SMD | with_PA | 0.9502 | 0.9502 | 0.9238 |
+|  | without_PA | 0.0135 | 0.0135 | 0.0241 |
 
 # Citation
 
