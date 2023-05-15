@@ -190,6 +190,7 @@ Code Reference
 
 Values are derived from average experiment result using three seed (1998, 1105, 1905).  
 
+### Anomaly Transformer
 | Dataset | PA | Precision | Recall | F1-Score |
 | --- | --- | --- | --- | --- |
 | MSL | with_PA | 0.9672 | 0.9672 | 0.9432 |
@@ -198,6 +199,18 @@ Values are derived from average experiment result using three seed (1998, 1105, 
 |  | without_PA | 0.0107 | 0.0107 | 0.0199 |
 | SMD | with_PA | 0.9502 | 0.9502 | 0.9238 |
 |  | without_PA | 0.0135 | 0.0135 | 0.0241 |
+
+### Random Anomaly Score
+| Dataset | PA | Precision | Recall | F1-Score |
+| --- | --- | --- | --- | --- |
+| MSL | with_PA | 0.8518 | 0.9833 | 0.9214 |
+|  | without_PA | 0.0923 | 0.0088 | 0.0160 |
+| SMAP | with_PA | 0.8800 | 0.9948 | 0.9611 |
+|  | without_PA | 0.1319 | 0.0103 | 0.0191 |
+| SMD | with_PA | 0.9149 | 0.6648 | 0.8461 |
+|  | without_PA | 0.0411 | 0.0099 | 0.0159 |
+
+* As witnessed in _towards a rigorous evaluation of time-series anomaly detection (Kim et al, 2021),_ Random Anomaly Score reports somewhat lower F1 score in SMD dataset than other datasets as it has shorter average contiguous anomaly segments, which has proven to be one of the most important determining factors of PA-F1 score._
 
 # Citation
 
