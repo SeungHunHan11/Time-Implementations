@@ -60,18 +60,18 @@ def get_energy(
 
         return thresh
     
-def evaluation(loader, device, criterion, model, temperature, threshold):
+def evaluation(threshold_loader, device, criterion, model,temperature, threshold,
+               point_adjustment = False):
 
     test_labels = []
     attens_energy = []
 
-    for i, (xx, yy) in enumerate(loader):
+    for i, (xx, yy) in enumerate(threshold_loader):
         xx = xx.to(device)
         window_size = xx.shape[1]
-
         output, series, prior, _ = model(xx)
 
-        loss = torch.mean(criterion(xx, output))
+        loss = torch.mean(criterion(xx, output), dim =-1)
 
         series_loss = 0.0
         prior_loss = 0.0
@@ -112,27 +112,28 @@ def evaluation(loader, device, criterion, model, temperature, threshold):
     print("pred:   ", pred.shape)
     print("gt:     ", gt.shape)
 
-    # detection adjustment
-    anomaly_state = False
-    for i in range(len(gt)):
-        if gt[i] == 1 and pred[i] == 1 and not anomaly_state:
-            anomaly_state = True
-            for j in range(i, 0, -1):
-                if gt[j] == 0:
-                    break
-                else:
-                    if pred[j] == 0:
-                        pred[j] = 1
-            for j in range(i, len(gt)):
-                if gt[j] == 0:
-                    break
-                else:
-                    if pred[j] == 0:
-                        pred[j] = 1
-        elif gt[i] == 0:
-            anomaly_state = False
-        if anomaly_state:
-            pred[i] = 1
+    if point_adjustment: 
+        # detection adjustment
+        anomaly_state = False
+        for i in range(len(gt)):
+            if gt[i] == 1 and pred[i] == 1 and not anomaly_state:
+                anomaly_state = True
+                for j in range(i, 0, -1):
+                    if gt[j] == 0:
+                        break
+                    else:
+                        if pred[j] == 0:
+                            pred[j] = 1
+                for j in range(i, len(gt)):
+                    if gt[j] == 0:
+                        break
+                    else:
+                        if pred[j] == 0:
+                            pred[j] = 1
+            elif gt[i] == 0:
+                anomaly_state = False
+            if anomaly_state:
+                pred[i] = 1
 
     pred = np.array(pred)
     gt = np.array(gt)
@@ -140,4 +141,4 @@ def evaluation(loader, device, criterion, model, temperature, threshold):
     print("pred: ", pred.shape)
     print("gt:   ", gt.shape)
 
-    return pred, gt
+    return test_energy, pred, gt
