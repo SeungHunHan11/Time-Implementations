@@ -39,7 +39,9 @@ def run(args):
     end_to_end = str2bool(args.end_to_end)
     eval_per_epoch = str2bool(args.eval_per_epoch)
     use_wandb = str2bool(args.use_wandb)
-    
+    use_rawdata = str2bool(args.use_rawdata)
+    apply_pa = str2bool(args.point_adjustment)
+
     savedir = os.path.join(args.savedir, args.dataset_name, args.run_name)
     os.makedirs(savedir, exist_ok=True)    
     
@@ -48,13 +50,20 @@ def run(args):
     device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
     _logger.info('Device: {}'.format(device))
 
+    # data_set = anomaly_dataset('/directory/data/Anomaly_Detection/yahoo_S5', 'yahoo','test','MinMaxScaler', 100,100, True,
+    #                         save_data_path= '/directory/data/Anomaly_Detection/yahoo_S5/A2Benchmark.npy',subdataset='A2')
+
     train_data_set = anomaly_dataset(
                                     args.datadir,
                                     args.dataset_name, 
                                     'train', 
                                     args.scaler, 
                                     args.window_size, 
-                                    args.step_size)
+                                    args.step_size,
+                                    use_rawdata = use_rawdata,
+                                    save_data_path = args.save_data_path,
+                                    subdataset = args.subdataset
+                                    )
     
     val_data_set = anomaly_dataset(
                                 args.datadir,
@@ -62,7 +71,11 @@ def run(args):
                                 'val', 
                                 args.scaler, 
                                 args.window_size, 
-                                args.step_size)
+                                args.step_size,
+                                use_rawdata = use_rawdata,
+                                save_data_path = args.save_data_path,
+                                subdataset = args.subdataset
+                                )
     
     test_data_set = anomaly_dataset(
                             args.datadir,
@@ -70,7 +83,11 @@ def run(args):
                             'test', 
                             args.scaler, 
                             args.window_size, 
-                            args.step_size)
+                            args.step_size,
+                            use_rawdata = use_rawdata,
+                            save_data_path = args.save_data_path,
+                            subdataset = args.subdataset
+                            )
 
     threshold_data_set = anomaly_dataset(
                             args.datadir,
@@ -78,7 +95,12 @@ def run(args):
                             'threshold', 
                             args.scaler, 
                             args.window_size, 
-                            args.step_size)
+                            args.step_size,
+                            use_rawdata = use_rawdata,
+                            save_data_path = args.save_data_path,
+                            subdataset = args.subdataset
+                            
+                            )
 
 
     train_loader = DataLoader(train_data_set, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers)
@@ -137,7 +159,7 @@ def run(args):
         
         if use_wandb:
             #initialize wandb
-            wandb.init(name=args.run_name,group = args.dataset_name, project='Anomaly-Transformer', config=args)
+            wandb.init(name=args.run_name,group = args.dataset_name, project=args.project_name, config=args)
 
 
         loader = threshold_loader if eval_per_epoch else None
@@ -156,7 +178,8 @@ def run(args):
             temperature = args.temperature,
             anomaly_ratio = args.anomaly_ratio,
             threshold_loader = threshold_loader,
-            use_wandb = use_wandb
+            use_wandb = use_wandb,
+            point_adjustment = apply_pa
             )
     
         if end_to_end:
@@ -190,38 +213,42 @@ def run(args):
                                         anomaly_ratio = args.anomaly_ratio,
                                         train_energy = train_energy
                                         )
-                pred, ground_truth= evaluation(
-                                            loader = test_loader,
-                                            device = device,
-                                            criterion = criterion_infer,
-                                            model = model, 
-                                            temperature = args.temperature,
-                                            threshold = threshold,
-                                            test_loader = test_loader
-                                            )
+                anomaly_score, pred, ground_truth= evaluation(
+                                                        threshold_loader = threshold_loader,
+                                                        device = device,
+                                                        criterion = criterion_infer,
+                                                        model = model, 
+                                                        temperature = args.temperature,
+                                                        threshold = threshold,
+                                                        point_adjustment = apply_pa
+                                                        )
+
+            np.save(os.path.join(savedir,'anomaly_score.npy'), anomaly_score)
+            np.save(os.path.join(savedir,'pred.npy'), pred)
+            np.save(os.path.join(savedir,'gt.npy'), ground_truth)
+
 
             accuracy = accuracy_score(ground_truth, pred)
             precision, recall, f_score, support = precision_recall_fscore_support(ground_truth, pred,
                                                                                 average='binary')
-            f1_sc = f1_score(ground_truth, pred)
-
             
-            eval_result = {
-                        'test_Accuracy' : accuracy, 
-                        'test_recall' : recall,
-                        'test_fscore' : f_score,
-                        'test_f1_score': f1_sc,
-                        'test_precision' : precision
-                        }
-    
+            eval_result = { 
+                            'threshold' : threshold,
+                            'eval_metrics': {
+                                        'test_Accuracy' : accuracy, 
+                                        'test_recall' : recall,
+                                        'test_f1_score': f_score,
+                                        'test_precision' : precision
+                                    }
+                            }
 
+    
             print(
-                "Accuracy : {:0.4f}, Precision : {:0.4f}, Recall : {:0.4f}, F-score : {:0.4f}, F1-Score {:0.4f}".format(
+                "Accuracy : {:0.4f}, Precision : {:0.4f}, Recall : {:0.4f}, F1-Score {:0.4f}".format(
                     accuracy, precision,
-                    recall, f_score, f1_sc))
+                    recall, f_score))
             
-            json.dump(eval_result, open(os.path.join(savedir, "test_result.json"),'w'), indent='\t')
-    
+            json.dump(eval_result, open(os.path.join(savedir, "best_test_result.json"),'w'), indent='\t')
     
     else:
         print('Inference Mode')
@@ -255,42 +282,51 @@ def run(args):
                                       anomaly_ratio = args.anomaly_ratio,
                                       train_energy = train_energy
                                       )
-            pred, ground_truth= evaluation(
-                                        loader = test_loader,
-                                        device = device,
-                                        criterion = criterion_infer,
-                                        model = model, 
-                                        temperature = args.temperature,
-                                        threshold = threshold
-                                        )
+            
+            anomaly_score, pred, ground_truth= evaluation(
+                                                    threshold_loader = threshold_loader,
+                                                    device = device,
+                                                    criterion = criterion,
+                                                    model = model, 
+                                                    temperature = args.temperature,
+                                                    threshold = threshold,
+                                                    point_adjustment = apply_pa
+                                                    )
+            
+
 
         accuracy = accuracy_score(ground_truth, pred)
         precision, recall, f_score, support = precision_recall_fscore_support(ground_truth, pred,
                                                                               average='binary')
-        f1_sc = f1_score(ground_truth, pred)
+        eval_result = { 
+                        'threshold' : threshold,
 
-        
-        eval_result = {
-                        'test_Accuracy' : accuracy, 
-                        'test_recall' : recall,
-                        'test_fscore' : f_score,
-                        'test_f1_score': f1_sc,
-                        'test_precision' : precision
-                       }
- 
+                        'eval_metrics': {
+                                    'test_Accuracy' : accuracy, 
+                                    'test_recall' : recall,
+                                    'test_f1_score': f_score,
+                                    'test_precision' : precision
+                                }
+                        }
+
+        np.save(os.path.join(savedir,'anomaly_score.npy'), anomaly_score)
+        np.save(os.path.join(savedir,'pred.npy'), pred)
+        np.save(os.path.join(savedir,'gt.npy'), ground_truth)
+
 
         print(
-            "Accuracy : {:0.4f}, Precision : {:0.4f}, Recall : {:0.4f}, F-score : {:0.4f}, F1-Score {:0.4f}".format(
+            "Accuracy : {:0.4f}, Precision : {:0.4f}, Recall : {:0.4f}, F1-Score {:0.4f}".format(
                 accuracy, precision,
-                recall, f_score, f1_sc))
+                recall, f_score))
         
-        json.dump(eval_result, open(os.path.join(savedir, "test_result.json"),'w'), indent='\t')
+        json.dump(eval_result, open(os.path.join(savedir, "best_test_result.json"),'w'), indent='\t')
     
         
 if __name__ =='__main__':
     
-    parser = argparse.ArgumentParser(description="Classification for Computer Vision")
+    parser = argparse.ArgumentParser(description="Anomaly Transformer Implementation")
     parser.add_argument('--use_wandb',type=str,default=True,help='Use wandb?')
+    parser.add_argument('--project_name',type=str,default='Anomaly-Transformer',help='Wandb project name')
 
     parser.add_argument('--train_mode',type=str,default=True,help='Train Mode')
     parser.add_argument('--use_scheduler',type=str,default=True,help='Use Scheduler?')
@@ -302,9 +338,12 @@ if __name__ =='__main__':
     parser.add_argument('--savedir',type=str,default='./saved_models/',help='Model save directory')
     parser.add_argument('--checkpoint_name',type=str,default='best_model',help='Checkpoint name')
 
-    parser.add_argument('--dataset_name',type=str,choices=['MSL','PSM','SMAP','SMD','SWAT'],help='Select dataset name')
+    parser.add_argument('--save_data_path',type=str,default = None,help='Npy files for rawdata?')
 
+    parser.add_argument('--dataset_name',type=str,choices=['MSL','PSM','SMAP','SMD','SWAT','yahoo'],help='Select dataset name')
     parser.add_argument('--datadir',type=str,default = './data', help='Dataset directory')
+    parser.add_argument('--subdataset',type=str,default = 'A1', help='Select Yahoo Subdataset')
+    parser.add_argument('--use_rawdata',type=str,default = False, help='Use rawdataset?')
 
     parser.add_argument('--scaler',type=str,default = 'StandardScaler', choices = ['StandardScaler', 'MinMaxScaler'] , help='Dataset directory')
     parser.add_argument('--window_size',type=int,default = 100, help='Sliding window size')
@@ -334,6 +373,8 @@ if __name__ =='__main__':
     parser.add_argument('--Lambda',type=int,default = 3, help='Loss function trade-off constant')
     parser.add_argument('--temperature',type=int,default = 50, help= 'Anomaly score ratio')
     parser.add_argument('--anomaly_ratio',type=float,default = 4.00, help='Threshold hyperparameter')
+
+    parser.add_argument('--point_adjustment', type = str, default = False, help='Apply Point Adjustment')
 
     parser.add_argument('--run_name',type = str,default = 'Anomaly Transformer Default', help='Experiment Name')
     
